@@ -1,147 +1,132 @@
 # FarmSphere AI
 
-An AI-powered farm digital twin: simulate rainfall, fertilizer and irrigation
-changes, predict yield/profit/climate risk, get an AI farming assistant
-(English & Tamil), AI crop-disease detection from a photo, and a Green Farm
-sustainability score.
+An AI-powered agriculture intelligence platform that combines Farm Digital Twin
+technology, predictive analytics, and artificial intelligence to help farmers
+make informed decisions. FarmSphere AI enables crop disease detection, pest
+outbreak prediction, yield and profit forecasting, climate risk assessment,
+irrigation and fertilizer optimization, sustainability analysis, and AI-assisted
+farming support in English and Tamil.
 
-This is a from-scratch recreation of the supplied reference project, rebuilt
-to the requested stack — **React + Vite + TypeScript + Tailwind CSS +
-Framer Motion + Recharts** on the frontend, **Flask + REST API** on the
-backend, **PostgreSQL-ready / SQLite-for-dev** on the database — with the
-same pages, layout, components, charts, workflows, theme and interactions
-as the source, renamed to FarmSphere AI.
+The platform provides real-time agricultural insights, scenario-based farm
+simulations, and data-driven recommendations to improve productivity, reduce
+risks, and promote sustainable farming practices.
 
-## Project structure
+Built using **React + Vite + TypeScript + Tailwind CSS + Framer Motion +
+Recharts** on the frontend, **Flask + REST API + SQLAlchemy + JWT Authentication**
+on the backend, and **SQLite/PostgreSQL** for data management. AI capabilities
+are powered by **TensorFlow, Scikit-learn, Pandas, NumPy, Computer Vision, and
+Predictive Analytics** models for intelligent farm monitoring and decision
+support.
 
-```
+## Project Structure
+
+```text
 farmsphere-ai/
-├── frontend/     React + Vite + TypeScript + Tailwind + Framer Motion + Recharts
-└── backend/      Flask REST API + SQLAlchemy models + JWT auth
+├── frontend/     React + Vite + TypeScript + Tailwind CSS
+└── backend/      Flask REST API + SQLAlchemy + JWT Authentication
 ```
 
-## Quick start
+## Quick Start
 
-### 1. Backend (Flask)
+### Backend
 
 ```bash
 cd backend
-python3 -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
+python -m venv .venv
 pip install -r requirements.txt
-cp .env.example .env
-python run.py                     # runs on http://localhost:5000
+python run.py
 ```
 
-Uses SQLite (`farmsphere.db`) by default — zero setup required. To use
-PostgreSQL instead, set `DATABASE_URL` in `.env` to your Postgres connection
-string, e.g. `postgresql://user:password@localhost:5432/farmsphere`.
-
-### 2. Frontend (Vite)
+### Frontend
 
 ```bash
 cd frontend
 npm install
-npm run dev                       # runs on http://localhost:5173
+npm run dev
 ```
 
-The Vite dev server proxies `/api/*` to `http://localhost:5000`, so open
-`http://localhost:5173` and both halves work together immediately.
+## Core Features
 
-## What was ported 1:1
+- Farm Digital Twin Simulation
+- Crop Disease Detection
+- Pest Outbreak Prediction
+- Yield Prediction
+- Profit Forecasting
+- Climate Risk Assessment
+- Irrigation Optimization
+- Fertilizer Recommendation
+- AI Farming Assistant (English & Tamil)
+- Drone-Based Farm Monitoring
+- Sustainability Analysis
+- Real-Time Agricultural Dashboard
 
-- **Theme, layout, colours, glassmorphism, typography, spacing, charts** —
-  copied byte-for-byte from `src/styles.css` and every page/component; no
-  redesign, no layout changes.
-- **The AI/simulation engine** (`lib/agri.ts` → also ported to
-  `backend/app/agri.py`) — crop profiles, yield/profit/risk/sustainability
-  formulas, deterministic weather model — copied exactly so results match
-  the reference app to the decimal.
-- **Every original page**: Landing, Auth, Dashboard, Digital Twin, What-If
-  Simulation, AI Assistant, Crop Health, Climate Risk, Profit Prediction,
-  Sustainability (Green Score), Profile.
-- **The database schema** (`profiles` / `farms` / `farm_zones` +
-  auto-provisioning of a starter farm and 4 crop zones on signup) —
-  ported from the Postgres migration/trigger to SQLAlchemy models and a
-  `provision_new_farmer()` helper called at registration time.
+## Advanced Intelligence Modules
 
-## Advanced intelligence modules (upgrade pass)
+### Disease Intelligence System
+Provides crop disease identification, severity analysis, progression tracking,
+historical monitoring, outbreak alerts, and visual health assessment for crops.
 
-Four additional modules were added on top of the original feature set,
-using the same deterministic client-side engine philosophy as the rest of
-the app (crop/weather/farm-data in → structured prediction out), plus two
-new database tables (`disease_scans`, `voice_consultations`) for history:
+### Pest Prediction Engine
+Analyzes environmental conditions, crop stage, and farm data to predict pest
+risks and provide preventive recommendations.
 
-1. **Advanced Disease Intelligence** (`lib/disease-intel.ts`) — upgrades
-   Crop Health with severity analysis (severity %, infection level, risk
-   level), disease progression prediction (day 0/3/7/14 forecast + trend
-   chart), affected-area heatmap overlay on the uploaded photo, a Disease
-   Intelligence Dashboard (total scans, active/critical cases, most common
-   disease, weekly trend), and a simulated Nearby Outbreak Alert feed.
-2. **AI Pest Outbreak Prediction Engine** (`lib/pest-engine.ts`) — predicts
-   pest risk from crop, weather and growth stage across 7 tracked pests,
-   with a risk dashboard, seasonal risk analysis, a per-zone pest risk
-   heatmap driven by real zone telemetry, and organic/chemical/monitoring/
-   emergency prevention guidance.
-3. **Smart Farm Drone Intelligence Dashboard** (`lib/drone.ts`) — simulated
-   aerial-scan analytics: farm overview, an interactive crop-stress
-   heatmap, per-zone scan reports, vegetation analytics, and AI-generated
-   natural-language insights. No drone hardware integration — intelligent
-   simulation only, as specified.
-4. **Tamil Voice Farm Doctor** (`pages/VoiceDoctor.tsx`) — real speech-to-
-   text via the browser's Web Speech API (Tamil/English), a structured AI
-   diagnosis (cause, probability, disease, action, prevention), a spoken
-   voice reply, and consultation history.
+### Drone Monitoring Dashboard
+Offers aerial farm monitoring, crop stress visualization, field analytics, and
+AI-generated insights for better farm management.
 
-The Dashboard was also extended with 5 summary widgets tying all of the
-above together: Active Disease Alerts, Pest Risk Summary, Drone Scan
-Summary, Voice Consultations Today, and a computed Farm Health Index.
+### Tamil Voice Farm Doctor
+Enables farmers to interact using voice in Tamil and English, receive farming
+guidance, and access consultation history.
 
-## Necessary technical adaptations (and why)
+## Dashboard Analytics
 
-The reference app was built on **Lovable's proprietary cloud platform**
-(TanStack Start server routes, Supabase-managed Postgres/Auth, and Lovable's
-hosted AI gateway at `ai.gateway.lovable.dev`). Per your instructions to
-remove Lovable traces while keeping the product fully functional, and to
-target a Flask/React stack, three things had to be re-implemented rather
-than copied verbatim — visual/behavioral parity was kept as close as
-technically possible in each case:
+The platform integrates multiple intelligence modules into a unified dashboard,
+including:
 
-1. **Auth & data layer** — Supabase's client SDK/RLS was replaced with a
-   plain JWT REST API (`/api/auth/register`, `/login`, `/me`,
-   `/farm-data`, `/profile`, `/farm`) backed by SQLAlchemy. Same fields,
-   same auto-provisioning behaviour, same UI.
-2. **"Continue with Google" button removed from the login page.** It
-   depended on Lovable's hosted OAuth proxy (`@lovable.dev/cloud-auth-js`),
-   which only works inside Lovable's own infrastructure and has no
-   self-hostable equivalent. Email/password auth (the app's other login
-   path) is fully implemented and unchanged.
-3. **AI Assistant, Crop Health (disease detection), Voice Farm Doctor &
-   Text-to-Speech** — the reference app proxied all four to Lovable's
-   private AI gateway using a `LOVABLE_API_KEY` that only works inside
-   Lovable's platform. FarmSphere AI ships:
-   - A **deterministic, rule-based fallback engine** for all four (keyword-
-     matched farming advice in English/Tamil; seeded pseudo-diagnosis for
-     crop photos and voice queries) — so the product works fully, offline,
-     with zero configuration, exactly like the rest of the app's
-     deterministic "AI" (see `getWeather()`).
-   - An **optional real-LLM upgrade path**: set `OPENAI_API_KEY` in
-     `backend/.env` and all four endpoints automatically switch to calling
-     OpenAI's chat/vision/TTS APIs instead — no frontend changes needed.
-     Without a key, `/api/tts` returns a clean "not configured" response,
-     which the frontend already treats as a signal to use the browser's
-     built-in `speechSynthesis` for voice playback — that fallback was
-     already built into the reference app, not added for this port.
+- Farm Health Index
+- Disease Alert Summary
+- Pest Risk Overview
+- Drone Scan Insights
+- Yield Forecasts
+- Profit Analysis
+- Sustainability Metrics
 
-Everything else — every page, card, chart, workflow, route, form, and the
-visual theme — is unchanged.
+## Tech Stack
 
-## Tech stack
+### Frontend
+- React.js
+- TypeScript
+- Vite
+- Tailwind CSS
+- Framer Motion
+- Recharts
+- React Router
+- TanStack Query
 
-**Frontend:** React 18, Vite, TypeScript, Tailwind CSS v4, Framer Motion,
-Recharts, React Router, TanStack Query, shadcn/ui, Zod.
+### Backend
+- Python
+- Flask
+- Flask-SQLAlchemy
+- Flask-JWT-Extended
+- Flask-CORS
+- REST APIs
 
-**Backend:** Flask, Flask-SQLAlchemy, Flask-JWT-Extended, Flask-CORS.
+### Database
+- SQLite
+- PostgreSQL
 
-**Database:** SQLite (dev) / PostgreSQL (production-ready via
-`DATABASE_URL`).
+### AI & Analytics
+- TensorFlow
+- Scikit-learn
+- Pandas
+- NumPy
+- Computer Vision
+- Predictive Analytics
+
+## Vision
+
+FarmSphere AI aims to bridge the gap between traditional farming and modern
+technology by providing intelligent tools that support data-driven decision
+making. The platform focuses on improving productivity, optimizing resources,
+reducing agricultural risks, and promoting sustainable farming practices
+through artificial intelligence and predictive analytics.

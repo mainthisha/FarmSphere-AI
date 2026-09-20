@@ -14,7 +14,7 @@ export function setToken(token: string | null) {
 }
 
 export const api: AxiosInstance = axios.create({
-  baseURL: "/api",
+  baseURL: "https://farmsphere-ai-wau9.onrender.com/api",
   headers: { "Content-Type": "application/json" },
 });
 
